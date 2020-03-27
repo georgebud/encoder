@@ -1,0 +1,34 @@
+	Pentru realizarea task-urilor am scris mai multe functii care sa simplifice codul.
+	
+	Functia read_line este o functie de citire a unui string de la tastatura caruia ii este alocata memorie
+exact dimensiunea sa si stocheaza linia citita intr-un vector de linii. Functia free_lines este
+o functie care elibereaza memoria alocata stringurilor stocate in vectorul de linii. Functia read_input_lines
+aloca memorie pentru vectorul de linii si citeste siruri de caractere pana la intalnirea sirului "END". Functia
+free_input elibereaza memoria alocata pentru linii dar si a vectorului de linii.
+	
+	Functiile check_words, check_character si check_numbers verifica daca sunt satisfacute cerintele.
+	
+	Functia get_highest_divisor_from_string cauta cel mai mare divizor din linia citita. Functia string_contains_digits
+verifica daca exista cifre in string. Functia get_reversed_string formeaza sirul inversat. Functia
+get_encrypted_word_from_string returneaza cuvantul codificat conform enuntului. Functia get_number_lenght returneaza
+dimensiunea unui numar. Functiile max_digit si min_digit formeaza cel mai mare, respectiv cel mai mic numar ce se poate
+obtine prin rotatia ciclica a cifrelor. Functiile get_frequent_character si get_infrequent character returneaza 
+caracterul cu numarul cel mai mare de aparitii, respectiv cel mai mic numar de aparitii din sir.
+
+	Functia get_line_complexity returneaza media codurilor ASCII dintr-un string. Functia get_split_encrypted_message
+imparte sirul cu mesajul criptat in n bucati, fiecareia ii este atribuita complexitatea. Functia 
+get_sorted_encrypted_message ordoneaza vectorul de structuri conform enuntului. Functia free_string elibereaza memoria 
+alocata vectorului de structuri.
+	
+	Functia get_encrypted_message returneaza mesajul codificat pentru taskul 2.
+	Functia get_final_encrypted_message returneaza mesajul codificat dupa rearanjare (taskul 3). Functia 
+	get_number_from_line returneaza numarul format dintr-un sir de cifre.
+
+	In main am apelat functiile necesare pentru realizarea cerintelor din fiecare task. Pentru task1 am afisat
+numarul de cuvinte, caractere si numere. Pentru task2 am afisat mesajul codificat. Pentru task3 am afisat
+mesajul codificat dupa rearanjare. La final am eliberat memoriile utilizate.
+
+	Tin sa mentionez ca primesc punctaj maxim pe sistemul local, iar dupa ce am uploadat pe vmchecker am vazut ca nu imi
+ia primul test. De pe forum am aflat ca e din cauza memoriei alocate, am incercat sa depistez problema, am facut
+modificari, insa rezultatul a fost acelasi. De asemenea, conform valgrind nu am pierderi de memorie.
+Lucrul pentru tema a fost, estimativ, 30-35 de ore. 

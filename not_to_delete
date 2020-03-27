@@ -1,0 +1,191 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define MAX_NO_CHAR 52
+
+char* read_line() {
+	char str[MAX_NO_CHAR];
+	char *input_line;
+	/*citire linie de la tastatura*/
+	// fflush (stdin);
+	if(fgets(str, MAX_NO_CHAR, stdin) != NULL) {
+		input_line = (char*)malloc(strlen(str) * sizeof(char)); /*alocare memorie pentru linie*/
+		/* stocare linie in vector de linii, fara ultimul caracter care e \n*/
+		strncpy(input_line, str, strlen(str)-1); 
+		input_line[strlen(str)-1] = '\0';
+
+	} else {
+		/*iese cu eroare daca nu s-a citit cu succes de la tastatura*/
+		return NULL;
+	}
+
+	return input_line;
+}
+
+void free_lines(char** input_lines, int line_number) {
+	for (int i = 0 ; i < line_number ; i++) {
+		free(input_lines[i]);
+	}
+}
+
+/*functia aloca memorie pentru un vector de linii (sir de caractere) si
+citeste, pe rand, de la tastatura, linii pana la intalnirea sirului "END" 
+si le stocheaza in vectorul de linii
+returneaza vectorul de linii
+primeste un parametru prin care se returneaza numarul de linii din vector*/
+char** read_input_lines(int* line_number_result) {
+	
+	int line_number = 0;
+	int input_lines_lenght = 1; /*lungimea vectorului de linii*/
+	char** input_lines = (char**)malloc(sizeof(char*)); /*alocare vector de linii*/
+	if(input_lines == NULL) {
+		printf("Eroare la alocarea memoriei\n");
+		return NULL;
+	}
+	/*stocheaza prima linie*/
+	if((input_lines[0] = read_line()) == NULL) {
+		printf("Eroare la citirea de la tastatura\n");
+		free(input_lines); /*eliberez memoria alocata pentru vectorul de linii*/
+		return NULL;
+	}
+
+	/*stocheaza liniile urmatoare*/
+	while(strcmp(input_lines[line_number], "END") != 0) {
+		
+		line_number++;
+
+		if (line_number == input_lines_lenght) {
+			input_lines_lenght *= 2;
+			input_lines = (char**)realloc(input_lines, input_lines_lenght * sizeof(char*));	//realocare vector de linii prin dublare
+			if(input_lines == NULL) {
+				printf("Eroare la realocarea memoriei\n");
+				return NULL;
+			}
+		}
+
+		
+		if((input_lines[line_number] = read_line()) == NULL) {
+			printf("Eroare la citirea de la tastatura\n");
+			free_lines(input_lines, line_number); /*eliberez memoria alocata pentru liniile citite*/
+			free(input_lines); /*eliberez memoria alocata pentru vectorul de linii*/
+			return NULL;
+		}	
+	}
+	*line_number_result = line_number;
+	
+	return input_lines;
+}
+
+/*functie care elibereaza memoria folosita de catre liniile citite
+elibereaza pe rand fiecare linie, apoi elibereaza memoria alocata vectorului de linii*/
+void free_input(char** input, int input_line_number) {
+	for(int i = 0; i <= input_line_number; i++) {
+		free(input[i]);
+	}
+	free(input);
+}
+
+long* check_numbers(char* line) {
+
+	long* number = (long*)malloc(sizeof(long));
+	if(number == NULL) {
+		printf("Eroare la alocarea memoriei - long\n");
+		return NULL;
+	}
+	*number = 0;
+	int negative = 0; /*consider ca numarul nu este negativ*/
+
+	if(strlen(line) > 1 && line[0] == '-') negative = 1; /*numarul este negativ*/
+	
+	for(int i = negative; i < strlen(line); i++) {
+		if(line[i] < 49 || line[i] > 57) {
+			free(number);
+			return NULL;
+		}
+		else *number = *number*10 + (line[i] - '0');
+	}
+	if(negative == 1)
+		*number *= -1;
+
+	return number;
+}
+
+char* check_character(char* line) {
+	
+	char* character = (char*)malloc(sizeof(char));
+	if(character == NULL) {
+		printf("Eroare la alocarea memoriei - character\n");
+		return NULL;
+	}
+	if(strlen(line) != 1) {
+		free(character);
+		return NULL;
+	}
+	else {
+		if(line[0] < 32 || line[0] >=127 || (line[0] >=48 && line[0] <=57))
+			return NULL;
+		else
+			*character = line[0];
+	}
+
+	return character;
+}
+
+char* check_words(char* line) {
+
+	char* word = (char*)malloc(strlen(line)*sizeof(char));
+	if(word == NULL) {
+		printf("Eroare la alocarea memoriei - word\n");
+		return NULL;
+	}
+	for(int i = 0; i < strlen(line); i++) {
+		if(line[i] < 32 || line[i] >= 127) {
+			free(word);
+			return NULL;
+		}
+	}
+	strcpy(word, line);
+
+	return word;
+}
+
+int divisor(int d, char* line) {
+	int l = strlen(line);
+	
+	for(d = l / 2; d >= 1; d--) {
+		if(l % d == 0)
+			return d;
+		else
+			return 1;
+	}
+}
+
+int main() {
+
+	int input_line_number, nr_words = 0, nr_characters = 0, nr_numbers = 0;
+	char** input = read_input_lines(&input_line_number);
+
+	for(int i = 0; i < (input_line_number)-1; i++) {
+		long* z = check_numbers(input[i]);
+		char* y = check_character(input[i]);
+		char* x = check_words(input[i]);
+
+		if(z != NULL) {
+			nr_numbers += 1;
+		}
+		else {
+			if(y != NULL) {
+				nr_characters += 1;
+			}
+			else {
+				nr_words += 1;
+			}
+		}
+	}
+	printf("%d %d %d\n", nr_words, nr_characters, nr_numbers);
+
+	free_input(input, input_line_number);
+
+	return 0;
+}
